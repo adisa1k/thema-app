@@ -6,25 +6,48 @@ const Sidebar = () => {
 
     return (
         <div className="h-full flex flex-col">
+
             {/* Logo */}
-            <div className="p-6 border-b border-gray-700">
-                <h1 className="text-xl font-bold text-green-400">THEMA Dashboard</h1>
+            <div className="px-6 py-5 border-b border-gray-700">
+                <h2 className="text-lg font-semibold tracking-wide text-green-500">THEMA Dashboard</h2>
             </div>
 
             {/* Navigacija */}
-            <nav className="flex flex-col">
+            <nav className="flex flex-col gap-2 px-4 py-6 text-sm mt-4">
                 <NavLink
-                to="/racuni">
+                to="/racuni"
+                className={({ isActive }) =>
+                `${linkClasses} ${
+                    isActive
+                    ? "bg-green-600 text-white font-semibold"
+                    : "text-gray-300 hover:bg-gray-700 hover:text-green-400"
+                }`
+                }
+                >
                     Racuni
                 </NavLink>
 
                 <NavLink
-                to="/pponude">
+                to="/ponude"
+                className={({ isActive }) =>
+                `${linkClasses} ${
+                    isActive
+                    ? "bg-green-600 text-white"
+                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                }`
+                }>
                     Ponude
                 </NavLink>
 
                 <NavLink
-                to="/finansijska-analiza">
+                to="/finansijska-analiza"
+                className={({ isActive }) =>
+                `${linkClasses} ${
+                    isActive
+                    ? "bg-green-600 text-white"
+                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                }`
+                }>
                     Finansijska analiza
                 </NavLink>
             </nav>

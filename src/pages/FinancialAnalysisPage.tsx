@@ -11,22 +11,24 @@ import ExportToPDF from '../components/FinancialAnalysis/ExportToPDF';
 
 const FinancialAnalysisPage = () => {
     const [data, setData] = useState<YearlyAnalysis[] | null>(null);
+    const [inputData, setInputData] = useState<InputData | null>(null);
 
     const handleSubmit = (input: InputData) => {
         const result = calculateTable(input);
         setData(result);
+        setInputData(input);
     };
   return (
     <div className='p-8'>
         <h1 className='text-2xl font-bold mb-6'>Finansijska analiza projekta</h1>
         <FinancialAnalysisForm onSubmit={handleSubmit}/>
-        {data && (
+        {data && inputData && (
           <>
           <FinancialAnalysisTable data={data} />
         <CashFlowChart data={data}/>
         <RevenueChart data={data}/>
-        <CumulativeRevenueChart data={data} />
-        <FinancialSummary data={data} investment={68143}/>
+        <CumulativeRevenueChart data={data} investment={inputData.investment} />
+        <FinancialSummary data={data} investment={inputData.investment}/>
 
         {/* Rezultati analize */}
         <div className='mt-10 bg-white p-6 rounded-lg shadow-md max-w-3xl mx-auto'>
@@ -53,12 +55,14 @@ const FinancialAnalysisPage = () => {
             </span>
           </p>
         </div>
+
+              <ExportToPDF />
           </>
           )
         }
-        {/* Dugme i unos za PDF */}
+      
 
-{data && <ExportToPDF />}
+
         
 
       

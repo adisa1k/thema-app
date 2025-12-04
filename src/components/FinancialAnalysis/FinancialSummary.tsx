@@ -8,9 +8,21 @@ interface Props {
 }
 
  const FinancialSummary = ({ data, investment }: Props) => {
-  const totalRevenue = data[data.length - 1].cumulativeRevenue;
-  const totalProfit = totalRevenue - investment - data.reduce((acc, d) => acc + d.maintenance, 0);
+  if (!data || data.length === 0) return null;
 
+  //Ukupan prihod je kumulativni prihod zadnje godine
+  const totalRevenue = data[data.length - 1].cumulativeRevenue;
+
+  // Ukupan trosak odrzavanja
+  const totalMaintenance = data.reduce((sum, d) => sum + d.maintenance, 0);
+
+  //Ukupan tok novca (sabira sve godine)
+  const totalCashFlow = data.reduce((sum, d) => sum + d.cashFlow, 0);
+
+  // Profit nakon 25 godina (tok novca vec ukljucuje investiciju)
+  const totalProfit = totalCashFlow;
+
+  // Godina povrata investicije (kad kumulativni prihod >= investicija)
   const paybackIndex = data.findIndex((d) => d.cumulativeRevenue >= investment);
   const paybackYear = paybackIndex !== -1 ? data[paybackIndex].year : null;
 
@@ -34,7 +46,7 @@ interface Props {
         </div>
 
         <div className="flex flex-col">
-          <span className="text-gray-500">Profit nakon 25 godina</span>
+          <span className="text-gray-500">Profit nakon {data.length} godina</span>
           <span className={`font-semibold ${totalProfit < 0 ? "text-red-600" : "text-green-700"}`}>
             {totalProfit.toLocaleString("bs-BA", { maximumFractionDigits: 0 })} KM
           </span>
@@ -46,6 +58,13 @@ interface Props {
             {paybackYear ? `${paybackYear}. godina` : "Nema povrata"}
           </span>
         </div>
+      </div>
+      <div className="mt-4 text-gray-500 text-sm">
+        <p>
+          Odrzavanje ukupno: {" "}
+          <strong>{totalMaintenance.toLocaleString("bs-BA")} KM</strong>
+        </p>
+
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ import {
   ReferenceLine,
 } from "recharts";
 import { type YearlyAnalysis } from "./types";
+import ExportToPDF from "./ExportToPDF";
 
 interface Props {
   data: YearlyAnalysis[];
@@ -17,7 +18,12 @@ interface Props {
 
  const CashFlowChart = ({ data }: Props) => {
   return (
-    <div className="mt-10 w-full h-96 bg-white p-6 shadow-md rounded-lg">
+    <div  className="mt-10 w-full h-96 bg-white p-6 shadow-md rounded-lg">
+      <div id="cashflow-chart" className="w-full h-72">
+
+      
+
+      
       <h2 className="text-xl font-semibold mb-4">Tok novca po godinama</h2>
 
       <ResponsiveContainer width="100%" height="100%" className="p-7">
@@ -54,6 +60,15 @@ interface Props {
           />
         </LineChart>
       </ResponsiveContainer>
+      </div>
+
+      <ExportToPDF 
+          targetId="cashflow-chart" 
+          fileName="tok-novca"
+          />
+
+      
+        
     </div>
   );
 };

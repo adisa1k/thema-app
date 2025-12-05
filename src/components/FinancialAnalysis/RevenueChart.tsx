@@ -2,6 +2,7 @@ import React from 'react'
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { type YearlyAnalysis } from './types'
+import ExportToPDF from './ExportToPDF';
 
 interface Props {
     data: YearlyAnalysis[];
@@ -10,6 +11,8 @@ interface Props {
 const RevenueChart = ({data}: Props) => {
   return (
     <div className='mt-10 w-full h-96 bg-white p-6 shadow-md rounded-lg'>
+        <div id="revenue-chart" className="w-full h-72">
+
             <h2 className='text-xl font-semibold mb-4'>Prihod i troškovi odrzavanja po godinama</h2>
             <ResponsiveContainer  width='100%' height='100%'>
                 <LineChart data={data} className='pb-6'>
@@ -24,7 +27,9 @@ const RevenueChart = ({data}: Props) => {
     
                 </LineChart>
             </ResponsiveContainer>
-                
+            </div>
+
+            <ExportToPDF targetId="revenue-chart" fileName='prihod'/>    
             
           
         </div>

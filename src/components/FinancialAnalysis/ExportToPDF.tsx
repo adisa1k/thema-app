@@ -3,18 +3,36 @@ import { useState } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
- const ExportToPDF = () => {
+interface Props {
+  targetId: string; // ID elementa koji se izvozi
+  fileName: string; // Naziv PDF fajla
+}
+
+ const ExportToPDF = ({ targetId, fileName }: Props) => {
   const [pageNumber, setPageNumber] = useState<string>("1");
 
   const handleExport = async () => {
-    const element = document.getElementById("analysis-content");
-    if (!element) return;
+    const element = document.getElementById(targetId);
+    if (!element) {
+        alert("Dokument za PDF nije pronadjen");
+      return;
+    }
+
+    // privremeno uklanjam overflow da html2canvas vidi sve
+    const originalOverflow = element.style.overflow;
+    element.style.overflow = "visible";
 
     const canvas = await html2canvas(element, {
       scale: 2,
       backgroundColor: "#ffffff",
       useCORS: true,
+      scrollX: 0,
+      scrollY: -window.scrollY,
+      windowWidth: element.scrollWidth,
+      windowHeight: element.scrollHeight,
     });
+
+    element.style.overflow = originalOverflow;
 
     const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF("p", "mm", "a4");
@@ -25,14 +43,32 @@ import html2canvas from "html2canvas";
     const pdfWidth = pageWidth;
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    let position = 0;
+
+    if (pdfHeight <= pageHeight) {
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+
+    } else {
+      // ako tabela prelazi jednu stranicu
+      let heightLeft = pdfHeight;
+
+      while (heightLeft > 0) {
+        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+        heightLeft -= pageHeight;
+        position -= pageHeight;
+
+        if (heightLeft > 0) pdf.addPage();
+      }
+    }
+
+    
 
     // Dodaj numeraciju stranice u dnu
     pdf.setFontSize(10);
     pdf.setTextColor(100);
     pdf.text(`Stranica ${pageNumber}`, pageWidth - 40, pageHeight - 10);
 
-    pdf.save(`Finansijska_analiza_${pageNumber}.pdf`);
+    pdf.save(`Finansijska_analiza_${fileName}_${pageNumber}.pdf`);
   };
 
   return (

@@ -1,5 +1,6 @@
 import React from 'react'
 import { type YearlyAnalysis } from './types';
+import ExportToPDF from './ExportToPDF';
 
 interface Props {
     data: YearlyAnalysis[];
@@ -14,7 +15,10 @@ interface Props {
     const totalMaintenance = data.reduce((acc, d) => acc + d.maintenance, 0);
 
   return (
-    <div className='overflow-x-auto mt-8'>
+    <div className=' mt-8'>
+
+        <div id="table-analysis" className='bg-white p-6 rounded-lg shadow-md'>
+            <div className='overflow-x-auto'>
         <table className='min-w-full border border-gray-300 text-sm bg-white shadow-md rounded-lg overflow-hidden'>
             <thead className='bg-gradient-to-r from-green-100 to-green-200 text-gray-800 font-semibold'>
                 <tr>
@@ -56,6 +60,10 @@ interface Props {
                 </tr>
             </tbody>
         </table>
+        </div>
+        </div>
+
+        <ExportToPDF targetId='table-analysis' fileName='tabela-analize'/>
       
     </div>
   )

@@ -16,23 +16,33 @@ interface Props {
   // Ukupan trosak odrzavanja
   const totalMaintenance = data.reduce((sum, d) => sum + d.maintenance, 0);
 
-  //Ukupan tok novca (sabira sve godine)
-  const totalCashFlow = data.reduce((sum, d) => sum + d.cashFlow, 0);
+  // //Ukupan tok novca (sabira sve godine)
+  // const totalCashFlow = data.reduce((sum, d) => sum + d.cashFlow, 0);
 
-  // Profit nakon 25 godina (tok novca vec ukljucuje investiciju)
-  const totalProfit = totalCashFlow;
+  // Profit nakon x godina - posljednji cashFlow
+  const totalProfit = data[data.length - 1].cashFlow;
 
   // Godina povrata investicije (kad kumulativni prihod >= investicija)
-  const paybackIndex = data.findIndex((d) => d.cumulativeRevenue >= investment);
+  // const paybackIndex = data.findIndex((d) => d.cumulativeRevenue >= investment);
+  // const paybackYear = paybackIndex !== -1 ? data[paybackIndex].year : null;
+
+  //Godina povrata investicije (kada cashFlow predje u +)
+
+  const paybackIndex = data.findIndex((d) => d.cashFlow >= 0);
   const paybackYear = paybackIndex !== -1 ? data[paybackIndex].year : null;
+
+
+  // const paybackRow = data.find((d) => d.cashFlow >= 0);
+  // const paybackYear = paybackRow ? paybackRow.year : null;
 
   return (
     <div className="bg-white shadow-md rounded-lg p-6 mt-8 max-w-3xl mx-auto text-center">
       <h2 className="text-xl font-bold mb-4">📘 Finansijski sažetak</h2>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm sm:text-base">
+
         <div className="flex flex-col">
-          <span className="text-gray-500">Procijenjeni troškovi</span>
+          <span className="text-gray-500">Procijenjeni troškovi - Investicija</span>
           <span className="font-semibold text-gray-800">
             {investment.toLocaleString("bs-BA")} KM
           </span>
@@ -59,6 +69,7 @@ interface Props {
           </span>
         </div>
       </div>
+
       <div className="mt-4 text-gray-500 text-sm">
         <p>
           Odrzavanje ukupno: {" "}

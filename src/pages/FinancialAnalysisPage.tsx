@@ -10,18 +10,22 @@ import FinancialSummary from '../components/FinancialAnalysis/FinancialSummary';
 import ExportToPDF from '../components/FinancialAnalysis/ExportToPDF';
 
 const FinancialAnalysisPage = () => {
+
+  // cuvamo i rezultate i input (da mozemo proslijediti investment u grafove/summary)
     const [data, setData] = useState<YearlyAnalysis[] | null>(null);
     const [inputData, setInputData] = useState<InputData | null>(null);
 
     const handleSubmit = (input: InputData) => {
         const result = calculateTable(input);
         setData(result);
-        setInputData(input);
+        setInputData(input);  //cuvamo input (sadrzi investment)
     };
   return (
     <div className='p-8'>
         <h1 className='text-2xl font-bold mb-6'>Finansijska analiza projekta</h1>
         <FinancialAnalysisForm onSubmit={handleSubmit}/>
+
+        {/* Prikaz rezultata ako ih ima */}
         {data && inputData && (
           <>
           <FinancialAnalysisTable data={data} />
